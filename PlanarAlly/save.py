@@ -17,6 +17,6 @@ def check_save(save_file):
             print("Save file has no save version. Cannot open.")
             sys.exit(2)
         if shelf['save_version'] != SAVE_VERSION:
-            print("Save version {} does not match the expected {}".format(shelf['save_version'], SAVE_VERSION))
-            print("If available you can try to convert the save_formats using the conversion scripts.")
+            print("Current save version {} does not match the expected save version {}".format(shelf['save_version'], SAVE_VERSION))
+            print("If available you can try to convert the save_formats using the conversion scripts. consult the documentation for more information.")
             sys.exit(2)
