@@ -12,8 +12,7 @@ Welcome to Planar Ally's documentation!
 
     getting_started
     lighting
-    Layers
-    Initiative
+    server
 
 These documents are in active development,
 
