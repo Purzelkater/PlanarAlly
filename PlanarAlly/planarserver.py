@@ -111,12 +111,12 @@ async def login(request):
             password = data['password']
             form = {'username': username, 'password': password}
             if 'register' in data:
-                if username in policy.user_map:
-                    form['error'] = "Username already taken"
-                elif not username:
+                if not username:
                     form['error'] = "Please provide a username"
                 elif not password:
                     form['error'] = "Please provide a password"
+                elif username in policy.user_map:
+                    form['error'] = "Username already taken"
                 else:
                     u = auth.User(username)
                     u.set_password(password)
