@@ -54,8 +54,11 @@ def convert(save_file):
 
         print("\nFixing username casing.\n\tIf any username collisions are found they will be printed below\n\talong with the new usernames these accounts have to use.\n")
 
+        collisions = False
+
         for l, u in username_counter.items():
             if len(u) > 1:
+                collisions = True
                 print(f'\tusername collision for {l}: {u}')
                 for i, _u in enumerate(u):
                     if i == 0: 
@@ -63,6 +66,10 @@ def convert(save_file):
                         continue
                     print(f"\t\tusername {_u} converted to {_u}{i}")
                     rename(shelf, user_map, _u, f'{_u}{i}')
+        
+        if not collisions:
+            print("\n\tNo collisions found.")
+        print("\n\nSave version increased.")
 
         shelf['user_map'] = user_map
         shelf['save_version'] = EXIT_SAVE_FORMAT
