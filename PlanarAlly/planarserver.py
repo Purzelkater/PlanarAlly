@@ -251,7 +251,7 @@ async def remove_shape(sid, data):
         if not layer.player_editable:
             logger.warn(f"{username} attempted to remove a shape from a dm layer")
             return
-        if username not in orig_shape['owners']:
+        if username.lower() not in [u.lower() for u in orig_shape['owners']]:
             logger.warn(f"{username} attempted to remove a shape it does not own")
             return
 
@@ -304,7 +304,7 @@ async def move_shape(sid, data):
             logger.warn(f"{username} attempted to move a shape on a dm layer")
             return
         # Use the server version of the shape.
-        if username not in orig_shape['owners']:
+        if username.lower() not in [u.lower() for u in orig_shape['owners']]:
             logger.warn(f"{username} attempted to move asset it does not own")
             return
     
@@ -331,10 +331,11 @@ def shape_wrap(player, shape):
     Helper function to make sure only data that the given player is allowed to see is sent.
     """
     pl_shape = dict(shape)
-    if 'annotation' in pl_shape and player not in pl_shape['owners']:
+    owners = [u.lower() for u in pl_shape['owners']]
+    if 'annotation' in pl_shape and player.lower() not in owners:
         del pl_shape['annotation']
-    pl_shape['trackers'] = [t for t in shape['trackers'] if player in pl_shape['owners'] or t['visible']]
-    pl_shape['auras'] = [a for a in shape['auras'] if player in pl_shape['owners'] or a['visible']]
+    pl_shape['trackers'] = [t for t in shape['trackers'] if player.lower() in owners or t['visible']]
+    pl_shape['auras'] = [a for a in shape['auras'] if player.lower() in owners or a['visible']]
     return pl_shape
 
 
@@ -350,7 +351,7 @@ async def update_shape(sid, data):
     orig_shape = layer.shapes[data['shape']['uuid']]
 
     if room.creator != username:
-        if username not in orig_shape['owners']:
+        if username.lower() not in [u.lower() for u in orig_shape['owners']]:
             logger.warn(f"{username} attempted to change asset it does not own")
             return
 
@@ -385,7 +386,7 @@ async def update_initiative(sid, data):
     shape = location.layer_manager.get_shape(data['uuid'])
 
     if room.creator != username:
-        if username not in shape['owners']:
+        if username.lower() not in [u.lower() for u in shape['owners']]:
             logger.warn(f"{username} attempted to change initiative of an asset it does not own")
             return
 
@@ -440,7 +441,8 @@ async def update_initiative_order(sid, data):
         initiatives = []
         for i in location.initiative:
             shape = location.layer_manager.get_shape(i['uuid'])
-            if shape and username in shape.get('owners', []) or i.get("visible", False):
+            owners = [u.lower() for u in shape.get('owners', [])]
+            if shape and username.lower() in owners or i.get("visible", False):
                 initiatives.append(i)
     await sio.emit("setInitiative", initiatives, room=location.sioroom, skip_sid=sid, namespace='/planarally')
 
@@ -497,7 +499,7 @@ async def new_initiative_effect(sid, data):
     shape = location.layer_manager.get_shape(data['actor'])
 
     if room.creator != username:
-        if username not in shape['owners']:
+        if username.lower() not in [u.lower() for u in shape['owners']]:
             logger.warn(f"{username} attempted to create a new initiative effect")
             return
     
@@ -521,7 +523,7 @@ async def update_initiative_effect(sid, data):
     shape = location.layer_manager.get_shape(data['actor'])
 
     if room.creator != username:
-        if username not in shape['owners']:
+        if username.lower() not in [u.lower() for u in shape['owners']]:
             logger.warn(f"{username} attempted to update an initiative effect")
             return
     
@@ -678,7 +680,8 @@ async def load_location(sid, location):
             initiatives = []
             for i in location.initiative:
                 shape = location.layer_manager.get_shape(i['uuid'])
-                if shape and username in shape.get('owners', []) or i.get("visible", False):
+                owners = [u.lower() for u in shape.get('owners', [])]
+                if shape and username.lower() in owners or i.get("visible", False):
                     initiatives.append(i)
         await sio.emit("setInitiative", initiatives, room=sid, namespace='/planarally')
         if hasattr(location, "initiativeRound"):
