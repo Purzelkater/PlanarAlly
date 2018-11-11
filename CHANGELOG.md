@@ -6,6 +6,18 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Changed
+- Changed feet to meter for ruler and add 1 digit decimal there
+- Changed grid size unit to float number (so you can set grid size to 0.5 meters)
+- Changed name of static/js files
+- Changed background picture on login.css and rooms.css
+- Made google fonts (open sanf) and Font Awesome local to fit the EU-GDPR
+- Added favicon to templates
+
+### Fixed
+- Fix to hide grid after location is switched and grid on both locations is set off
+
+
 ### Added
 - host option in server_config.cfg [Issue 99]
 
